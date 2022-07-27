@@ -1,4 +1,41 @@
-tasks: []
+github:
+  prebuilds:
+    master: true
+    branches: false
+    pullRequests: false
+    pullRequestsFromForks: false
+    addCheck: false
+    addComment: false
+    addBadge: false
+
+tasks:
+  - name: Upload airgap bundle
+    init: |
+      # Install KOTS
+      curl https://kots.io/install/${KOTSADM_VERSION} | bash
+      kubectl-kots version
+
+      # Download kotsadm bundle
+      mkdir ./kotsadm
+      wget https://github.com/replicatedhq/kots/releases/download/v${KOTSADM_VERSION}/kotsadm.tar.gz -O ./kotsadm/kotsadm.tar.gz
+
+      # Upload the kotsadmin bundle
+      kubectl-kots admin-console push-images \
+        ./kotsadm/kotsadm.tar.gz \
+        ${REGISTRY_URL}/gitpod \
+        --registry-username ${REGISTRY_USERNAME} \
+        --registry-password ${REGISTRY_PASSWORD}
+
+      # Download the Gitpod bundle
+      mkdir ./gitpod
+      wget "${GITPOD_BUNDLE_URL}" -O ./gitpod/gitpod.airgap
+
+      # Upload the Gitpod bundle
+      kubectl-kots admin-console push-images \
+        ./gitpod/gitpod.airgap \
+        ${REGISTRY_URL}/gitpod \
+        --registry-username ${REGISTRY_USERNAME} \
+        --registry-password ${REGISTRY_PASSWORD}
 
 vscode:
   extensions:
