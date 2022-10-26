@@ -12,7 +12,7 @@ echo "GITPOD_BUNDLE_URL: ${GITPOD_BUNDLE_URL}" > /dev/null
 echo "Let's Go Mr Driver!"
 
 # Install KOTS
-curl "https://kots.io/install/${KOTSADM_VERSION}" | bash
+curl "https://kots.io/install/${KOTSADM_VERSION}" | sudo bash
 kubectl-kots version
 
 # Download kotsadm bundle
